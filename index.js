@@ -323,11 +323,16 @@ const captureWebsite = async (input, options) => {
 		const bodyHandle = await page.$('body');
 		const bodyBoundingHeight = await bodyHandle.boundingBox();
 		await bodyHandle.dispose();
+		if (bodyBoundingHeight.height > 1000) {
+			viewportOptions.height = Math.min(1000, bodyBoundingHeight.height)
+			await page.setViewport(viewportOptions);
+			screenshotOptions.fullPage = false;
+		}
 
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight && viewportIncrement + viewportHeight < 250) {
+		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
 			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
