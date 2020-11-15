@@ -327,7 +327,7 @@ const captureWebsite = async (input, options) => {
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
+		while (viewportIncrement + viewportHeight < bodyBoundingHeight && viewportIncrement + viewportHeight < 250) {
 			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
